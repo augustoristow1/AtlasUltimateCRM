@@ -1,7 +1,8 @@
 import logging
-from atlas_ultimate_crm.domain.ports.messaging_provider import MessagingProvider, TemplateComponent
+
 from atlas_ultimate_crm.application.services.conversation_service import ConversationService
 from atlas_ultimate_crm.domain.enums.messaging import ChannelType
+from atlas_ultimate_crm.domain.ports.messaging_provider import MessagingProvider
 
 logger = logging.getLogger(__name__)
 

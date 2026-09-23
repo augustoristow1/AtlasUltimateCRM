@@ -1,11 +1,19 @@
-from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QLineEdit, QFormLayout, QTabWidget, QWidget, QComboBox,
-    QTextEdit, QTableWidget, QTableWidgetItem, QHeaderView
-)
 from PySide6.QtCore import Qt
-from atlas_ultimate_crm.ui.theme import COLORS
+from PySide6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
+
 from atlas_ultimate_crm.domain.enums.contact import LifecycleStage
+from atlas_ultimate_crm.ui.theme import COLORS
 
 
 class NewContactDialog(QDialog):
@@ -129,8 +137,8 @@ class ContactDetailDialog(QDialog):
         # Tasks tab
         tasks_tab = QWidget()
         tsk_layout = QVBoxLayout(tasks_tab)
-        from atlas_ultimate_crm.domain.enums.tasks import TaskStatus
         from sqlalchemy import select
+
         from atlas_ultimate_crm.infrastructure.database.models.activities import TaskModel
         with self._bs.session_context() as session:
             stmt = select(TaskModel).where(TaskModel.contact_id == c.id).order_by(TaskModel.due_at)

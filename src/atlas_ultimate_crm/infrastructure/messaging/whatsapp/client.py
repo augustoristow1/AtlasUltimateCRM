@@ -1,6 +1,11 @@
 import logging
+
 import httpx
-from atlas_ultimate_crm.infrastructure.messaging.whatsapp.schemas import WAMessage, WAMessageResponse
+
+from atlas_ultimate_crm.infrastructure.messaging.whatsapp.schemas import (
+    WAMessage,
+    WAMessageResponse,
+)
 
 logger = logging.getLogger(__name__)
 

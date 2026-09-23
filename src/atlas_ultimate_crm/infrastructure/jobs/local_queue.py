@@ -2,7 +2,7 @@ import logging
 import queue
 import threading
 import uuid
-from typing import Callable, Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 

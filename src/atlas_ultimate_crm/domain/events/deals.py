@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from atlas_ultimate_crm.domain.events.base import DomainEvent
 
 

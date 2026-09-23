@@ -1,9 +1,7 @@
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QPushButton, QFrame, QSpacerItem, QSizePolicy
-)
-from PySide6.QtCore import Qt, Signal
-from atlas_ultimate_crm.ui.theme import COLORS
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QFrame, QLabel, QPushButton, QVBoxLayout, QWidget
 
+from atlas_ultimate_crm.ui.theme import COLORS
 
 NAV_ITEMS = [
     ("dashboard", "Dashboard", "⬛"),

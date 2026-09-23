@@ -1,4 +1,5 @@
 from enum import Enum
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

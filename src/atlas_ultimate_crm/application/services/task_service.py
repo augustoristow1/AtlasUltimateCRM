@@ -1,13 +1,14 @@
 import logging
-from datetime import datetime, UTC
-from typing import Sequence, Optional
+from datetime import UTC, datetime
+from typing import Optional, Sequence
 
+from sqlalchemy import select
+
+from atlas_ultimate_crm.application.event_bus import InMemoryEventBus
 from atlas_ultimate_crm.domain.entities.task import TaskEntity
-from atlas_ultimate_crm.domain.enums.tasks import TaskStatus, TaskPriority
+from atlas_ultimate_crm.domain.enums.tasks import TaskPriority, TaskStatus
 from atlas_ultimate_crm.domain.events.deals import TaskCompleted
 from atlas_ultimate_crm.infrastructure.database.models.activities import TaskModel
-from atlas_ultimate_crm.application.event_bus import InMemoryEventBus
-from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,21 @@
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QListWidget, QListWidgetItem, QTextEdit, QLineEdit,
-    QSplitter, QFrame, QScrollArea
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
+    QPushButton,
+    QScrollArea,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtCore import Qt
+
 from atlas_ultimate_crm.ui.theme import COLORS
+
+_REFRESH_INTERVAL_MS = 5000  # 5 seconds
 
 
 class ConversationListItem(QListWidgetItem):
@@ -24,6 +35,20 @@ class InboxPage(QWidget):
         self._current_conv = None
         self._setup_ui()
         self.refresh()
+        self._start_auto_refresh()
+
+    def _start_auto_refresh(self):
+        self._refresh_timer = QTimer(self)
+        self._refresh_timer.setInterval(_REFRESH_INTERVAL_MS)
+        self._refresh_timer.timeout.connect(self._auto_refresh)
+        self._refresh_timer.start()
+
+    def _auto_refresh(self):
+        """Periodic refresh: update conversation list and messages without blocking the UI."""
+        selected_conv_id = self._current_conv.id if self._current_conv else None
+        self._reload_conv_list(selected_conv_id)
+        if self._current_conv:
+            self._reload_messages_preserving_scroll()
 
     def _setup_ui(self):
         main_layout = QHBoxLayout(self)
@@ -133,9 +158,13 @@ class InboxPage(QWidget):
 
         main_layout.addWidget(splitter)
 
-    def refresh(self):
+    def _reload_conv_list(self, selected_conv_id: str | None):
+        """Repopulate conversation list, restoring previous selection."""
+        # Temporarily block signals to avoid triggering _on_conv_selected during repopulation
+        self._conv_list.blockSignals(True)
         self._conv_list.clear()
         convs = self._bs.conversation_service.list_open_conversations(self._bs.workspace_id)
+        item_to_select = None
         for conv in convs:
             contact = self._bs.contact_service.get_contact(conv.contact_id)
             name = contact.name if contact else conv.contact_id
@@ -143,6 +172,44 @@ class InboxPage(QWidget):
             last_msg = messages[-1].body if messages else ""
             item = ConversationListItem(conv, name, last_msg)
             self._conv_list.addItem(item)
+            if selected_conv_id and conv.id == selected_conv_id:
+                item_to_select = item
+        self._conv_list.blockSignals(False)
+        if item_to_select:
+            self._conv_list.setCurrentItem(item_to_select)
+
+    def refresh(self):
+        selected_conv_id = self._current_conv.id if self._current_conv else None
+        self._reload_conv_list(selected_conv_id)
+
+    def _reload_messages_preserving_scroll(self):
+        """Reload messages in the chat view, scrolling to bottom only if already at bottom."""
+        if not self._current_conv:
+            return
+
+        scrollbar = self._messages_scroll.verticalScrollBar()
+        at_bottom = scrollbar.value() >= scrollbar.maximum() - 10
+
+        messages = self._bs.conversation_service.list_messages(self._current_conv.id)
+        current_count = self._messages_layout.count()
+
+        # Only redraw if message count changed
+        if len(messages) == current_count:
+            return
+
+        while self._messages_layout.count():
+            child = self._messages_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        for msg in messages:
+            bubble = self._make_bubble(msg)
+            self._messages_layout.addWidget(bubble)
+
+        if at_bottom:
+            QTimer.singleShot(50, lambda: self._messages_scroll.verticalScrollBar().setValue(
+                self._messages_scroll.verticalScrollBar().maximum()
+            ))
 
     def _on_conv_selected(self, item):
         if not item or not isinstance(item, ConversationListItem):
@@ -167,7 +234,6 @@ class InboxPage(QWidget):
             self._messages_layout.addWidget(bubble)
 
         # Scroll to bottom
-        from PySide6.QtCore import QTimer
         QTimer.singleShot(50, lambda: self._messages_scroll.verticalScrollBar().setValue(
             self._messages_scroll.verticalScrollBar().maximum()
         ))

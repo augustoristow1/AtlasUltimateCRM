@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from atlas_ultimate_crm.webhook.routes import create_router
 
 

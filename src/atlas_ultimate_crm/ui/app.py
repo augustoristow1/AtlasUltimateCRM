@@ -1,6 +1,4 @@
 import logging
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 

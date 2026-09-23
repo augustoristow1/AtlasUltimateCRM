@@ -1,8 +1,10 @@
-from datetime import datetime, UTC
-from atlas_ultimate_crm.domain.entities.conversation import ConversationEntity
-from atlas_ultimate_crm.domain.entities.contact import ContactEntity
-from atlas_ultimate_crm.infrastructure.database.models.contacts import WhatsAppOptInModel
+from datetime import UTC, datetime
+
 from sqlalchemy import select
+
+from atlas_ultimate_crm.domain.entities.contact import ContactEntity
+from atlas_ultimate_crm.domain.entities.conversation import ConversationEntity
+from atlas_ultimate_crm.infrastructure.database.models.contacts import WhatsAppOptInModel
 
 
 class MessagingPolicyService:

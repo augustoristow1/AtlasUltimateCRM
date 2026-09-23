@@ -1,10 +1,11 @@
-from typing import Sequence, Optional
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+from typing import Optional, Sequence
+
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func
 
 from atlas_ultimate_crm.domain.entities.conversation import ConversationEntity
-from atlas_ultimate_crm.domain.enums.messaging import ConversationStatus, ChannelType
+from atlas_ultimate_crm.domain.enums.messaging import ChannelType, ConversationStatus
 from atlas_ultimate_crm.infrastructure.database.models.conversations import ConversationModel
 
 

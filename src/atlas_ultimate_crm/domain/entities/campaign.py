@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
-from datetime import datetime, UTC
-from typing import Optional
 import uuid
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from typing import Optional
+
 from atlas_ultimate_crm.domain.enums.campaigns import CampaignStatus, RecipientStatus
 
 

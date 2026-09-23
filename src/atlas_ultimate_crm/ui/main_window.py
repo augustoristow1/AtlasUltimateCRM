@@ -1,8 +1,10 @@
 import logging
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QStackedWidget
+
 from PySide6.QtCore import Qt
-from atlas_ultimate_crm.ui.theme import STYLESHEET
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QStackedWidget, QWidget
+
 from atlas_ultimate_crm.ui.navigation.sidebar import Sidebar
+from atlas_ultimate_crm.ui.theme import STYLESHEET
 
 logger = logging.getLogger(__name__)
 

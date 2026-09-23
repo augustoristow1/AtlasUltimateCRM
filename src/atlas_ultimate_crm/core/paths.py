@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 APP_NAME = "Atlas Ultimate CRM"
 
 

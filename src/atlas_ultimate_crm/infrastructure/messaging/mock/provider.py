@@ -1,6 +1,10 @@
 import uuid
-from atlas_ultimate_crm.domain.ports.messaging_provider import MessagingProvider, SendTextResult, MockTemplate, TemplateComponent
 
+from atlas_ultimate_crm.domain.ports.messaging_provider import (
+    MockTemplate,
+    SendTextResult,
+    TemplateComponent,
+)
 
 MOCK_TEMPLATES = [
     MockTemplate(

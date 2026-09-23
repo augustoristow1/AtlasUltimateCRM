@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine, event, Engine
+from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.pool import StaticPool
+
 from atlas_ultimate_crm.core.paths import get_database_path
 
 

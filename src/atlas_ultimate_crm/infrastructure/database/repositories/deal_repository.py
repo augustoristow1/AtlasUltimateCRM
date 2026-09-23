@@ -1,7 +1,8 @@
-from typing import Sequence, Optional
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+from typing import Optional, Sequence
+
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func
 
 from atlas_ultimate_crm.domain.entities.deal import DealEntity
 from atlas_ultimate_crm.domain.enums.deals import DealStatus

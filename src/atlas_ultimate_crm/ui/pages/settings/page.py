@@ -1,9 +1,15 @@
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QLineEdit, QGroupBox, QFormLayout, QComboBox, QMessageBox
+    QFormLayout,
+    QGroupBox,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
+
 from atlas_ultimate_crm.ui.theme import COLORS
-from atlas_ultimate_crm.core.config import AppMode
 
 
 class SettingsPage(QWidget):

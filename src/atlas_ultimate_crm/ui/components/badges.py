@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QLabel
+
 from atlas_ultimate_crm.ui.theme import COLORS, get_badge_style
 
 

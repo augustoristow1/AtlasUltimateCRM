@@ -1,4 +1,5 @@
 import logging
+
 from PySide6.QtCore import QThread, Signal
 
 logger = logging.getLogger(__name__)

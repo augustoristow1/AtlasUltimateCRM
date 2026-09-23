@@ -1,6 +1,7 @@
 import logging
 from collections import defaultdict
 from typing import Callable, Type
+
 from atlas_ultimate_crm.domain.events.base import DomainEvent
 
 logger = logging.getLogger(__name__)

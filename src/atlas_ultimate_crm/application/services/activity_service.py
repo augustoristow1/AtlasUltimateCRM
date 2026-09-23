@@ -1,12 +1,12 @@
-import logging
-from typing import Sequence, Optional
 import json
+import logging
+from typing import Optional, Sequence
+
+from sqlalchemy import select
 
 from atlas_ultimate_crm.domain.entities.activity import ActivityEntity
 from atlas_ultimate_crm.domain.enums.activities import ActivityType
 from atlas_ultimate_crm.infrastructure.database.models.activities import ActivityModel
-from sqlalchemy.orm import Session
-from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 

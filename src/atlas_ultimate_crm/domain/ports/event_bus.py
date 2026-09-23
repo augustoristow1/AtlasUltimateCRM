@@ -1,6 +1,6 @@
-from typing import Protocol, Callable, Type
-from atlas_ultimate_crm.domain.events.base import DomainEvent
+from typing import Callable, Protocol, Type
 
+from atlas_ultimate_crm.domain.events.base import DomainEvent
 
 EventHandler = Callable[[DomainEvent], None]
 

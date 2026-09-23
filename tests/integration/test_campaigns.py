@@ -1,4 +1,10 @@
 from atlas_ultimate_crm.domain.enums.campaigns import CampaignStatus, RecipientStatus
+from atlas_ultimate_crm.infrastructure.database.repositories.campaign_repository import SQLCampaignRepository
+
+
+def _get_recipients(bootstrap, campaign_id):
+    with bootstrap.session_context() as session:
+        return SQLCampaignRepository(session).get_recipients(campaign_id)
 
 
 def test_create_campaign(bootstrap):
@@ -17,7 +23,7 @@ def test_run_campaign_mock(bootstrap):
     bootstrap.campaign_service.add_recipients(campaign.id, [contact.id])
     bootstrap.campaign_service.run_campaign(campaign.id, ws)
 
-    recipients = bootstrap.campaign_service._repo.get_recipients(campaign.id)
+    recipients = _get_recipients(bootstrap, campaign.id)
     assert len(recipients) == 1
     assert recipients[0].status in (RecipientStatus.SENT, RecipientStatus.SKIPPED)
 
@@ -29,10 +35,10 @@ def test_campaign_reply(bootstrap):
     bootstrap.campaign_service.add_recipients(campaign.id, [contact.id])
     bootstrap.campaign_service.run_campaign(campaign.id, ws)
 
-    recipients = bootstrap.campaign_service._repo.get_recipients(campaign.id)
+    recipients = _get_recipients(bootstrap, campaign.id)
     sent_recipient = next((r for r in recipients if r.provider_message_id), None)
     if sent_recipient and sent_recipient.provider_message_id:
         bootstrap.campaign_service.mark_replied(sent_recipient.provider_message_id)
-        updated = bootstrap.campaign_service._repo.get_recipients(campaign.id)
+        updated = _get_recipients(bootstrap, campaign.id)
         replied = [r for r in updated if r.status == RecipientStatus.REPLIED]
         assert len(replied) >= 1

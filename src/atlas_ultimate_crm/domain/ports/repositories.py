@@ -1,4 +1,5 @@
 from typing import Protocol, Sequence
+
 from atlas_ultimate_crm.domain.entities.contact import ContactEntity
 from atlas_ultimate_crm.domain.entities.workspace import WorkspaceEntity
 

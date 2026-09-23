@@ -1,10 +1,18 @@
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView, QTabWidget
+    QAbstractItemView,
+    QHBoxLayout,
+    QHeaderView,
+    QLabel,
+    QPushButton,
+    QTableWidget,
+    QTableWidgetItem,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtCore import Qt
-from atlas_ultimate_crm.ui.theme import COLORS
+
 from atlas_ultimate_crm.domain.enums.tasks import TaskStatus
+from atlas_ultimate_crm.ui.theme import COLORS
 
 
 class TasksPage(QWidget):

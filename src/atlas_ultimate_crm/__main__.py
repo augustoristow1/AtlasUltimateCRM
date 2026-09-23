@@ -8,6 +8,7 @@ def main() -> None:
     bootstrap.initialize()
 
     from PySide6.QtWidgets import QApplication
+
     from atlas_ultimate_crm.ui.app import CRMApplication
 
     app = QApplication(sys.argv)

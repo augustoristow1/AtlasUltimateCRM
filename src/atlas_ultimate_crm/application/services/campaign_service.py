@@ -1,53 +1,65 @@
 import logging
-import uuid
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Sequence
 
-from atlas_ultimate_crm.domain.entities.campaign import CampaignEntity, CampaignRecipientEntity
-from atlas_ultimate_crm.domain.enums.campaigns import CampaignStatus, RecipientStatus
-from atlas_ultimate_crm.infrastructure.database.repositories.campaign_repository import SQLCampaignRepository
 from atlas_ultimate_crm.application.event_bus import InMemoryEventBus
 from atlas_ultimate_crm.application.services.activity_service import ActivityService
+from atlas_ultimate_crm.core.config import AppMode, get_settings
+from atlas_ultimate_crm.domain.entities.campaign import CampaignEntity, CampaignRecipientEntity
 from atlas_ultimate_crm.domain.enums.activities import ActivityType
+from atlas_ultimate_crm.domain.enums.campaigns import CampaignStatus, RecipientStatus
 
 logger = logging.getLogger(__name__)
 
 
 class CampaignService:
-    def __init__(self, repo: SQLCampaignRepository, event_bus: InMemoryEventBus,
-                 session_factory, activity_service: ActivityService, messaging_service) -> None:
-        self._repo = repo
+    def __init__(self, event_bus: InMemoryEventBus, session_factory,
+                 activity_service: ActivityService, messaging_service) -> None:
         self._event_bus = event_bus
         self._session_factory = session_factory
         self._activity_service = activity_service
         self._messaging_service = messaging_service
 
+    def _repo(self, session):
+        from atlas_ultimate_crm.infrastructure.database.repositories.campaign_repository import (
+            SQLCampaignRepository,
+        )
+        return SQLCampaignRepository(session)
+
     def create_campaign(self, workspace_id: str, name: str, template_id: str | None = None) -> CampaignEntity:
         campaign = CampaignEntity(workspace_id=workspace_id, name=name, template_id=template_id)
         with self._session_factory() as session:
-            from atlas_ultimate_crm.infrastructure.database.repositories.campaign_repository import SQLCampaignRepository as Repo
-            repo = Repo(session)
-            saved = repo.save_campaign(campaign)
+            saved = self._repo(session).save_campaign(campaign)
             session.commit()
         return saved
 
     def add_recipients(self, campaign_id: str, contact_ids: list[str]) -> list[CampaignRecipientEntity]:
         recipients = []
         with self._session_factory() as session:
-            from atlas_ultimate_crm.infrastructure.database.repositories.campaign_repository import SQLCampaignRepository as Repo
-            repo = Repo(session)
             for contact_id in contact_ids:
                 r = CampaignRecipientEntity(campaign_id=campaign_id, contact_id=contact_id)
-                repo.save_recipient(r)
+                self._repo(session).save_recipient(r)
                 recipients.append(r)
             session.commit()
         return recipients
 
     def run_campaign(self, campaign_id: str, workspace_id: str) -> None:
-        """Execute campaign - send template messages to all pending recipients."""
-        campaign = self._repo.get_by_id(campaign_id)
-        if not campaign:
-            return
+        """Execute campaign - send template messages to all pending recipients.
+
+        Only available in mock mode. Real Meta API sends are blocked to prevent
+        accidental mass messaging during development and testing.
+        """
+        settings = get_settings()
+        if settings.app_mode == AppMode.META:
+            raise RuntimeError(
+                "Campaign execution is blocked in META mode. "
+                "Use the WhatsApp Business Manager to send real campaigns."
+            )
+
+        with self._session_factory() as session:
+            campaign = self._repo(session).get_by_id(campaign_id)
+            if not campaign:
+                return
 
         with self._session_factory() as session:
             from atlas_ultimate_crm.infrastructure.database.models.campaigns import CampaignModel
@@ -57,7 +69,9 @@ class CampaignService:
                 cm.started_at = datetime.now(UTC)
                 session.commit()
 
-        recipients = self._repo.get_recipients(campaign_id)
+        with self._session_factory() as session:
+            recipients = self._repo(session).get_recipients(campaign_id)
+
         for recipient in recipients:
             if recipient.status != RecipientStatus.PENDING:
                 continue
@@ -91,7 +105,9 @@ class CampaignService:
     def _update_recipient_status(self, recipient_id: str, status: RecipientStatus,
                                   provider_message_id: str = "", error: str = "") -> None:
         with self._session_factory() as session:
-            from atlas_ultimate_crm.infrastructure.database.models.campaigns import CampaignRecipientModel
+            from atlas_ultimate_crm.infrastructure.database.models.campaigns import (
+                CampaignRecipientModel,
+            )
             m = session.get(CampaignRecipientModel, recipient_id)
             if m:
                 m.status = status.value
@@ -106,19 +122,24 @@ class CampaignService:
 
     def mark_replied(self, provider_message_id: str) -> None:
         """Called when a contact replies to a campaign message."""
-        recipient = self._repo.find_pending_recipient_by_provider_msg(provider_message_id)
-        if not recipient:
-            return
+        with self._session_factory() as session:
+            recipient = self._repo(session).find_pending_recipient_by_provider_msg(provider_message_id)
+            if not recipient:
+                return
         self._update_recipient_status(recipient.id, RecipientStatus.REPLIED)
         with self._session_factory() as session:
-            from atlas_ultimate_crm.infrastructure.database.models.campaigns import CampaignRecipientModel
+            from atlas_ultimate_crm.infrastructure.database.models.campaigns import (
+                CampaignRecipientModel,
+            )
             m = session.get(CampaignRecipientModel, recipient.id)
             if m:
                 m.replied_at = datetime.now(UTC)
                 session.commit()
 
     def list_campaigns(self, workspace_id: str) -> Sequence[CampaignEntity]:
-        return self._repo.list_by_workspace(workspace_id)
+        with self._session_factory() as session:
+            return self._repo(session).list_by_workspace(workspace_id)
 
     def count_active(self, workspace_id: str) -> int:
-        return self._repo.count_active(workspace_id)
+        with self._session_factory() as session:
+            return self._repo(session).count_active(workspace_id)

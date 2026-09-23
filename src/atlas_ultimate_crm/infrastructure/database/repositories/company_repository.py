@@ -1,7 +1,8 @@
-from typing import Sequence, Optional
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+from typing import Optional, Sequence
+
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func, or_
 
 from atlas_ultimate_crm.domain.entities.company import CompanyEntity
 from atlas_ultimate_crm.infrastructure.database.models.companies import CompanyModel

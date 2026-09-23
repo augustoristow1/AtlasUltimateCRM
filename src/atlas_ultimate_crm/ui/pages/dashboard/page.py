@@ -1,9 +1,7 @@
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QScrollArea, QFrame
-)
-from PySide6.QtCore import Qt
-from atlas_ultimate_crm.ui.theme import COLORS
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QScrollArea, QVBoxLayout, QWidget
+
 from atlas_ultimate_crm.ui.components.cards import MetricCard
+from atlas_ultimate_crm.ui.theme import COLORS
 
 
 class DashboardPage(QWidget):
@@ -91,8 +89,9 @@ class DashboardPage(QWidget):
                 if item.widget():
                     item.widget().deleteLater()
 
-            from atlas_ultimate_crm.infrastructure.database.models.activities import ActivityModel
             from sqlalchemy import select
+
+            from atlas_ultimate_crm.infrastructure.database.models.activities import ActivityModel
             with self._bs.session_context() as session:
                 stmt = select(ActivityModel).where(
                     ActivityModel.workspace_id == ws_id

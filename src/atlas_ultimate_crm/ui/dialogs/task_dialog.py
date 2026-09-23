@@ -1,10 +1,18 @@
+from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QLineEdit, QFormLayout, QComboBox, QDateTimeEdit
+    QComboBox,
+    QDateTimeEdit,
+    QDialog,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
 )
-from PySide6.QtCore import QDateTime, Qt
-from atlas_ultimate_crm.ui.theme import COLORS
+
 from atlas_ultimate_crm.domain.enums.tasks import TaskPriority
+from atlas_ultimate_crm.ui.theme import COLORS
 
 
 class NewTaskDialog(QDialog):
@@ -64,7 +72,7 @@ class NewTaskDialog(QDialog):
         title = self._title.text().strip()
         if not title:
             return
-        from datetime import datetime, UTC
+        from datetime import UTC, datetime
         due_qdt = self._due.dateTime()
         due_dt = datetime(due_qdt.date().year(), due_qdt.date().month(), due_qdt.date().day(),
                          due_qdt.time().hour(), due_qdt.time().minute(), tzinfo=UTC)

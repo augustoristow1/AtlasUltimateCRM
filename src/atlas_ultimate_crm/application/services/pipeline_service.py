@@ -1,11 +1,15 @@
 import logging
 import uuid
-from typing import Sequence, Optional
+from typing import Sequence
 
-from atlas_ultimate_crm.domain.entities.pipeline import PipelineEntity, PipelineStageEntity
-from atlas_ultimate_crm.infrastructure.database.models.pipelines import PipelineModel, PipelineStageModel
-from atlas_ultimate_crm.core.constants import DEFAULT_PIPELINE_NAME
 from sqlalchemy import select
+
+from atlas_ultimate_crm.core.constants import DEFAULT_PIPELINE_NAME
+from atlas_ultimate_crm.domain.entities.pipeline import PipelineEntity, PipelineStageEntity
+from atlas_ultimate_crm.infrastructure.database.models.pipelines import (
+    PipelineModel,
+    PipelineStageModel,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
-from datetime import datetime, UTC
-from typing import Optional
 import uuid
-from atlas_ultimate_crm.domain.enums.messaging import ConversationStatus, ChannelType
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from typing import Optional
+
+from atlas_ultimate_crm.domain.enums.messaging import ChannelType, ConversationStatus
 
 
 @dataclass

@@ -1,6 +1,8 @@
-from datetime import datetime, UTC
-from sqlalchemy import String, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import UTC, datetime
+
+from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from atlas_ultimate_crm.infrastructure.database.base import Base
 
 

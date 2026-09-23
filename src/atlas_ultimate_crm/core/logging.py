@@ -1,5 +1,6 @@
 import logging
 import logging.handlers
+
 from atlas_ultimate_crm.core.paths import get_logs_dir
 
 

@@ -1,9 +1,19 @@
 import logging
 import uuid
-from atlas_ultimate_crm.domain.ports.messaging_provider import SendTextResult, MockTemplate, TemplateComponent
+
+from atlas_ultimate_crm.domain.ports.messaging_provider import (
+    MockTemplate,
+    SendTextResult,
+    TemplateComponent,
+)
 from atlas_ultimate_crm.infrastructure.messaging.whatsapp.client import WhatsAppClient
-from atlas_ultimate_crm.infrastructure.messaging.whatsapp.schemas import WAMessage, WATextBody, WATemplateBody, WATemplateLanguage, WATemplateComponent
-from atlas_ultimate_crm.core.exceptions import MessagingError
+from atlas_ultimate_crm.infrastructure.messaging.whatsapp.schemas import (
+    WAMessage,
+    WATemplateBody,
+    WATemplateComponent,
+    WATemplateLanguage,
+    WATextBody,
+)
 
 logger = logging.getLogger(__name__)
 

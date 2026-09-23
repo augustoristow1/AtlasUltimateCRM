@@ -1,11 +1,14 @@
-from typing import Sequence, Optional
-from datetime import datetime, UTC
+from typing import Optional, Sequence
+
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func
 
 from atlas_ultimate_crm.domain.entities.campaign import CampaignEntity, CampaignRecipientEntity
 from atlas_ultimate_crm.domain.enums.campaigns import CampaignStatus, RecipientStatus
-from atlas_ultimate_crm.infrastructure.database.models.campaigns import CampaignModel, CampaignRecipientModel
+from atlas_ultimate_crm.infrastructure.database.models.campaigns import (
+    CampaignModel,
+    CampaignRecipientModel,
+)
 
 
 def _campaign_to_entity(m: CampaignModel) -> CampaignEntity:

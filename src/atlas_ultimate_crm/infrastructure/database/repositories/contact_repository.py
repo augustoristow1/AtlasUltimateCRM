@@ -1,11 +1,11 @@
-import uuid
-from datetime import datetime, UTC
-from typing import Sequence, Optional
+from datetime import UTC, datetime
+from typing import Optional, Sequence
+
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func, or_
 
 from atlas_ultimate_crm.domain.entities.contact import ContactEntity
-from atlas_ultimate_crm.domain.enums.contact import LifecycleStage, ContactSource
+from atlas_ultimate_crm.domain.enums.contact import ContactSource, LifecycleStage
 from atlas_ultimate_crm.infrastructure.database.models.contacts import ContactModel
 
 
